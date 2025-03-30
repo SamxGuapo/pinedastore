@@ -1,0 +1,25 @@
+﻿body {
+    background-color: #fff;
+    height: 100%;
+}
+
+
+form {
+    width: 24%;
+    margin: auto;
+    padding-top: 150px;
+}
+
+.bg {
+    background-color: rgb(173, 150, 200);
+}
+
+.btn-color {
+    background-color: #64219f;
+    border: none;
+}
+
+.btn-color {
+    background-color: #64219f;
+    border: none;
+}

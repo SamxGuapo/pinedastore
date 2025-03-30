@@ -1,0 +1,150 @@
+﻿
+@model AdministradorModel
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Compras</title>
+    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Compras</h1>
+        <form asp-action="comprarproducto" method="post">
+            <div class="mb-3">
+                <label for="Fecha" class="form-label">Fecha</label>
+                <input  type="date" class="form-control" name="Fecha" required />
+            </div>
+            <div class="mb-3">
+                <label for="Codigo" class="form-label">Código</label>
+                <input type="text" class="form-control" id="codigoProducto" required />
+                <button type="button" class="btn btn-primary" onclick="agregarProducto()">Agregar Producto</button>
+            </div>
+            <div class="mb-3">
+                <label for="Proveedor" class="form-label">Proveedor</label>
+                <input  type="text" class="form-control" id="empresa" name="Proveedor" required />
+                <button type="button" class="btn btn-primary" onclick="agregarProvedor()">Agregar Provedor</button>
+            </div>
+
+            <div class="mb-3">
+                <label for="Items" class="form-label"></label>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID Producto</th>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Valor por Unidad</th>
+                            <th>Subtotal</th>
+                            <th>Provedor</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+        </form>
+        <tbody id="productosTable">
+            <tr>
+                <td><input asp-for="Codigo" type="text" class="form-control" name="ProductoId[]" /></td>
+                <td><input asp-for="Nombre" type="text" class="form-control" name="Nombre[]" /></td>
+                <td><input  type="number" class="form-control" name="Cantidad[]" onkeydown="calcularSubtotal(event, this)" /></td>
+                <td><input asp-for="Unidades" type="number" class="form-control" name="valorPorUnidad[]" /></td>
+                <td><input  type="number" class="form-control" name="Subtotal[]" readonly /></td>
+                <td><input asp-for="provedor" type="text" class="form-control" name="Provedor[]" /></td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar Compra</button>
+
+    </div>
+    <script>
+        document.getElementById("enviarBtn").addEventListener("click", function () {
+            const tabla = document.getElementById("tablaDatos");
+            const filas = tabla.querySelectorAll("tbody tr");
+
+
+            const items = [];// Array
+
+            filas.forEach(fila => {
+                const codigo = fila.querySelector(".codigo").value;
+                const descripcion = fila.querySelector(".descripcion").value;
+                const cantidad = parseInt(fila.querySelector(".cantidad").value);
+                const valor = parseFloat(fila.querySelector(".valor").value);
+
+                // Agrega   al array
+                items.push({
+                    codigo: codigo,
+                    Descripcion: descripcion,
+                    Cantidad: cantidad,
+                    Valor: valor
+                });
+            });
+
+            // Enviar  controlador - Metodo
+            fetch("/Recibir/RecibirDatoss", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(items)
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error("Error en la respuesta del servidor");
+                    return response.json();
+                })
+                .then(data => console.log("Respuesta del servidor:", data))
+                .catch(error => console.error("Error al enviar los datos:", error));
+        });
+
+    </script>
+
+    <script>
+        function agregarProducto() {
+            var Codigo = $("#codigoProducto").val();
+            $.ajax({
+                url: '/Compras/comprarproducto',
+                type: 'GET',
+                data: { Codigo: Codigo },
+                success: function (producto) {
+                    var nuevaFila = `
+                                                <tr>
+                                                    <td><input type="text" class="form-control" name="ProductoId[]" value="${producto.codigo}" readonly /></td>
+                                                    <td><input type="text" class="form-control"   name="Nombre[]" value="${producto.nombre}" readonly /></td>
+                                                    <td><input type="number" class="form-control" name="Cantidad[]" onkeydown="calcularSubtotal(event, this)" /></td>
+                                                    <td><input type="number" class="form-control" name="Uni[]" value="${producto.precio}" readonly /></td>
+                                                    <td><input type="number" class="form-control" name="Subtotal[]" readonly /></td>
+                                                    <td><input type="number" class="form-control" name="Provedor[]" readonly /></td>
+                                                    <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this)">Eliminar</button></td>
+                                                </tr>
+                                            `;
+                    $("#productosTable").append(nuevaFila);
+                },
+                error: function () {
+                    alert("Producto no encontrado.");
+                }
+            });
+        }
+
+        function calcularSubtotal(event, input) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                var row = $(input).closest("tr");
+                var Unidades = parseFloat(row.find("input[name='Cantidad[]']").val());
+                var precio = parseFloat(row.find("input[name='Uni[]']").val());
+                var subtotal = (precio * Unidades).toFixed(2);
+                row.find("input[name='Subtotal[]']").val(subtotal);
+            }
+        }
+
+        function eliminarFila(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        
+    </script>
+</body>
+</html>

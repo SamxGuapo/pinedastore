@@ -1,0 +1,106 @@
+﻿@model registromodel
+@{
+    Layout = null;
+    ViewData["Title"] = "Home Page";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Registrate | PinedaStore</title>
+</head>
+<body>
+
+   
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+
+        
+
+        <div class="row border rounded-5 p-3 bg-white shadow box-area">
+
+           
+
+            <div class="container text-center">
+                <form asp-action="Registro" asp-controller="Registro">
+                <div class="row align-items-center">
+                    <div class="header-text mb-4">
+                        <h2>Registrate</h2>
+                        <p>Es rápido y fácil.</p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input  class="form-control form-control-lg bg-light fs-6" asp-for="id" placeholder="Identificacion">
+                        <span asp-validation-for="id" class="text-danger"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input class="form-control form-control-lg bg-light fs-6" asp-for="nombre" placeholder="Nombres">
+                        <span asp-validation-for="nombre" class="text-danger"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input  class="form-control form-control-lg bg-light fs-6" asp-for="apellido" placeholder="Apellidos">
+                        <span asp-validation-for="apellido" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 fw-bould">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                            <input max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" type="date" class="form-control" asp-for="fecha" placeholder="fecha" />
+                        <span asp-validation-for="fecha" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 fw-bould">
+                        <label class="form-label">Sexo</label>
+                        <span asp-validation-for="sexo" class="text-danger"></span>
+                        <select class="form-select" aria-label="floating label select example" name="sexo">
+                            <option selected>---------</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input  class="form-control form-control-lg bg-light fs-6" name="correo" placeholder="Correo electronico">
+                        <span asp-validation-for="correo" class="text-danger"></span>
+                    </div>
+                        <div class="input-group mb-3">
+                            <input class="form-control form-control-lg bg-light fs-6" name="usuario" placeholder="Usuario">
+                            <span asp-validation-for="usuario" class="text-danger"></span>
+                        </div>
+                    <div class="input-group mb-3">
+                        <input class="form-control form-control-lg bg-light fs-6" name="contraseña" type="password" placeholder="Contraseña">
+                        <span asp-validation-for="contraseña" class="text-danger"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input  class="form-control form-control-lg bg-light fs-6" name="confirmarC" type="password" placeholder="Confirmar Contraseña">
+                        <span asp-validation-for="confirmarC" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-5 d-flex justify-content-between">
+                    </div>
+                    <div class="input-group mb-3">
+                        <button type="submit" class="btn btn-lg btn-primary w-100 fs-6">Registrar</button>
+                            
+                           
+                    </div>
+                    <div class="input-group mb-3">
+                            <button class="btn btn-lg btn-primary w-100 fs-6" asp-action="Index" asp-controller="Inicio">Salir</button>
+                    </div>
+                </div>
+                   
+                </form>
+            </div>
+
+        </div>
+       
+    </div>
+
+</body>
+</html>

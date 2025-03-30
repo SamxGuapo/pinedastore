@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Listado de Provedor";
+}
+<form asp-action="pdfRegistro" asp-controller="PdfProvedor" method="post">
+    <h2>Listado de Provedor</h2>
+    <p>
+        Haga click en el siguiente enlace para generar el documento
+    </p>
+    <a href="/PdfProvedor/ListadoprovedorPdf" target="_blank" class="btn btn-primary">Generar PDF</a>
+</form>
